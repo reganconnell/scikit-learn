@@ -245,6 +245,42 @@ def load_data(module_path, data_file_name):
 
     return data, target, target_names
 
+def convert_to_dataframe(data, target, feature_names, target_names='target'):
+    """Stores data as a data frame.
+
+    Parameters
+    ----------
+    data : Numpy array
+        A 2D array with each row representing one sample and each column
+        representing the features of a given sample.
+
+    target : Numpy array
+        A 1D array holding target variables for all the samples in `data.
+        For example target[0] is the target variable for data[0].
+
+    feature_names : List
+        A list containing the names of the features.
+
+    target_names : Numpy array
+        A 1D array containing the names of the classifications. For example
+        target_names[0] is the name of the target[0] class.
+
+    Returns
+    -------
+    data : Pandas DataFrame
+        A 2D heterogeneous tabular data structure with concatenated features
+        and target variables. Column names labeled by 'feature_names' and target
+        named 'target', or prepended by 'target_' in the case of a
+        multidimensional target.
+    """
+    data= np.c_[data, target]
+
+    if len(target.shape) > 1:
+        target_names = ["target_" + col for col in target_names]
+
+    columns = np.append(feature_names, target_names)
+    return pd.DataFrame(data, columns=columns)
+
 
 def load_wine(return_X_y=False):
     """Load and return the wine dataset (classification).
